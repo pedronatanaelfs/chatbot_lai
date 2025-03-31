@@ -1,0 +1,378 @@
+texto	label
+PREAMBULO	ORG
+Presidencia da Republica	MISC
+Casa Civil Subchefia para Assuntos Juridicos LEI	PER
+DE 18 DE NOVEMBRO DE 2011	MISC
+Mensagem de veto Vigencia Regulamento Regula	MISC
+inciso XXXIII	MISC
+inciso II do SS 3o	MISC
+SS	ORG
+Constituicao	MISC
+Federal	LOC
+Lei	MISC
+Lei	MISC
+Lei	MISC
+PRESIDENTA	MISC
+Congresso Nacional	LOC
+Lei: CAPITULO I DISPOSICOES GERAIS	MISC
+ARTIGO_1	MISC
+Lei	MISC
+Uniao	ORG
+Estados	LOC
+Distrito Federal	LOC
+Municipios	LOC
+inciso XXXIII	MISC
+inciso II do SS 3o	MISC
+SS	ORG
+Constituicao Federal	MISC
+Lei: I	MISC
+Poderes Executivo	ORG
+Legislativo	ORG
+Cortes de Contas	LOC
+Judiciario	LOC
+Ministerio Publico	ORG
+Uniao	ORG
+Estados	LOC
+Distrito Federal	LOC
+Municipios	LOC
+ARTIGO_2	MISC
+Lei	MISC
+subvencoes	MISC
+contrato de gestao	MISC
+ARTIGO_3	PER
+Lei	MISC
+solicitacoes	PER
+III	MISC
+V	MISC
+administracao	LOC
+ARTIGO_4]
+Art. 4o	MISC
+Lei	MISC
+III	MISC
+Estado	LOC
+modificacoes	MISC
+ARTIGO_5	PER
+Estado	LOC
+CAPITULO II	MISC
+ARTIGO_6	PER
+III	MISC
+ARTIGO_7	MISC
+Lei	MISC
+III	MISC
+pessoa fisica	PER
+V	MISC
+VII	MISC
+prestacoes	LOC
+VETADO	MISC
+Lei	MISC
+SS	ORG
+Estado	LOC
+SS	ORG
+SS	ORG
+SS	ORG
+Lei	MISC
+SS	ORG
+SS	ORG
+SS	ORG
+ARTIGO_8	LOC
+SS	ORG
+III	MISC
+V	MISC
+SS	ORG
+internet	MISC
+SS	ORG
+SS 2o	ORG
+I	MISC
+III	MISC
+V	MISC
+telefonica	ORG
+Lei	MISC
+Convencao sobre os Direitos das Pessoas com Deficiencia	MISC
+Decreto Legislativo	ORG
+SS	ORG
+Municipios	LOC
+internet	MISC
+SS 2o	ORG
+Lei Complementar	LOC
+Lei de Responsabilidade Fiscal	MISC
+ARTIGO_9	LOC
+CAPITULO III DO PROCEDIMENTO DE ACESSO	MISC
+ARTIGO_10	MISC
+Lei	MISC
+SS	ORG
+SS	ORG
+SS	ORG
+ARTIGO_11	MISC
+SS 1o	ORG
+III	MISC
+SS	ORG
+SS	ORG
+SS	ORG
+SS	ORG
+SS	ORG
+SS	ORG
+ARTIGO_12	ORG
+Vide Lei	LOC
+Vigencia)	MISC
+Estara	PER
+Lei	MISC
+ARTIGO_12	ORG
+Redacao dada pela Lei	MISC
+Vigencia	LOC
+SS	ORG
+Lei	MISC
+Vigencia	LOC
+SS 2o Estara	ORG
+SS	ORG
+Lei	MISC
+Lei	MISC
+Vigencia	LOC
+ARTIGO_13	LOC
+ARTIGO_14	MISC
+Secao II	PER
+ARTIGO_15	LOC
+ARTIGO_16	LOC
+Poder Executivo Federal	ORG
+Controladoria-Geral da Uniao	ORG
+Lei	MISC
+IV	MISC
+Lei	MISC
+SS	ORG
+Controladoria-Geral da Uniao	ORG
+SS	ORG
+Controladoria-Geral da Uniao	ORG
+Lei	MISC
+SS	ORG
+Controladoria-Geral da Uniao	ORG
+Comissao Mista de Reavaliacao de Informacoes	ORG
+ARTIGO_17	MISC
+administracao	LOC
+Ministro de Estado da area	MISC
+Comissao Mista de Reavaliacao de Informacoes	ORG
+SS	ORG
+Forcas Armadas	LOC
+Comando.	ORG
+Comissao Mista de Reavaliacao de Informacoes	ORG
+ARTIGO_18	ORG
+Poderes Legislativo e Judiciario	ORG
+Ministerio Publico	ORG
+ARTIGO_19	LOC
+VETADO	MISC
+SS	ORG
+VETADO	MISC
+SS	ORG
+Poder Judiciario	ORG
+Ministerio Publico	ORG
+Conselho Nacional de Justica	ORG
+Conselho Nacional do Ministerio Publico	ORG
+ARTIGO_20	LOC
+Lei	MISC
+Capitulo	MISC
+CAPITULO IV DAS RESTRICOES DE ACESSO	MISC
+Gerais	LOC
+ARTIGO_21	LOC
+ARTIGO_22	MISC
+Lei	MISC
+Estado	LOC
+pessoa fisica	PER
+Secao II	PER
+Grau	MISC
+Prazos de Sigilo	MISC
+Estado	LOC
+Pais	ORG
+Estados	LOC
+III	MISC
+IV	MISC
+Pais; V	MISC
+Forcas Armadas	LOC
+infracoes	MISC
+ARTIGO_24	LOC
+Estado	LOC
+SS	ORG
+III	MISC
+SS	ORG
+Presidente	MISC
+Vice-Presidente da Republica	MISC
+SS	ORG
+SS 1o	ORG
+SS	ORG
+tornar-se-a	MISC
+SS	ORG
+Estado	LOC
+Secao III Da Protecao	PER
+Controle de Informacoes Sigilosas	ORG
+ARTIGO_25	LOC
+Estado	LOC
+Regulamento	ORG
+SS	ORG
+SS	ORG
+SS 3o Regulamento	ORG
+ARTIGO_26	PER
+Lei	MISC
+Secao IV	PER
+Reclassificacao	MISC
+Desclassificacao	LOC
+ARTIGO_27	LOC
+Presidente da Republica	MISC
+Vice-Presidente da Republica	MISC
+Ministros de	ORG
+Estado	LOC
+Comandantes da Marinha	ORG
+Exercito	ORG
+Aeronautica	ORG
+Chefes de Missoes Diplomaticas	ORG
+Consulares	LOC
+inciso I	MISC
+fundacoes	MISC
+III	MISC
+I	MISC
+DAS	ORG
+Grupo-Direcao	MISC
+Assessoramento Superiores	ORG
+Lei	MISC
+SS	ORG
+I	MISC
+subdelegacao	ORG
+SS	ORG
+inciso I	MISC
+Ministros	MISC
+SS	ORG
+Comissao Mista de Reavaliacao de Informacoes	ORG
+ARTIGO_28	PER
+III	MISC
+IV	MISC
+ARTIGO_29	LOC
+Regulamento	ORG
+SS	ORG
+SS	ORG
+SS	ORG
+ARTIGO_30	LOC
+III	MISC
+SS	ORG
+SS	ORG
+Secao V	PER
+Das Informacoes Pessoais	MISC
+ARTIGO_31	ORG
+SS	ORG
+SS	ORG
+SS	ORG
+inciso II do	MISC
+III	MISC
+IV	MISC
+V	MISC
+SS	ORG
+SS 5o	ORG
+CAPITULO V DAS RESPONSABILIDADES	MISC
+ARTIGO_32	MISC
+Lei	MISC
+razao do exercicio	LOC
+III	MISC
+ma-fe	MISC
+analise	LOC
+solicitacoes	LOC
+V	MISC
+VII	MISC
+Estado	LOC
+SS	ORG
+Forcas Armadas	LOC
+Lei	MISC
+SS	ORG
+Leis	MISC
+ARTIGO_33	PER
+Lei	MISC
+IV	MISC
+V	MISC
+SS 1o	ORG
+I	MISC
+III	MISC
+IV	MISC
+inciso II	MISC
+SS	ORG
+inciso V	MISC
+sancao	LOC
+inciso IV	MISC
+SS	ORG
+inciso V	MISC
+ARTIGO_34	LOC
+ARTIGO_35	MISC
+VETADO	MISC
+SS	ORG
+Comissao Mista de Reavaliacao de Informacoes	ORG
+Lei	MISC
+III	MISC
+Pais	LOC
+SS 1o	ORG
+SS	ORG
+inciso III	MISC
+SS	ORG
+inciso II	PER
+SS	ORG
+Comissao Mista de Reavaliacao de Informacoes	ORG
+SS	ORG
+SS 5o	ORG
+Comissao Mista de Reavaliacao de Informacoes	ORG
+Lei	MISC
+ARTIGO_36	MISC
+ARTIGO_37	LOC
+Gabinete de Seguranca Institucional da Presidencia da Republica	ORG
+Nucleo de Seguranca e Credenciamento	LOC
+NSC	ORG
+I	MISC
+II	PER
+Republica Federativa do Brasil	LOC
+Ministerio das Relacoes Exteriores	ORG
+NSC	ORG
+ARTIGO_38	PER
+Lei	MISC
+ARTIGO_39	MISC
+Lei	MISC
+SS	ORG
+Lei	MISC
+SS	ORG
+Comissao Mista de Reavaliacao de Informacoes	ORG
+Lei	MISC
+SS	ORG
+SS	ORG
+ARTIGO_40	MISC
+Lei	MISC
+administracao	LOC
+Lei; II	MISC
+Lei	MISC
+III	MISC
+Lei	MISC
+IV	MISC
+Lei	MISC
+ARTIGO_41	LOC
+Poder Executivo Federal	ORG
+administracao	LOC
+III	MISC
+IV	MISC
+Congresso Nacional de relatorio	LOC
+Lei	MISC
+ARTIGO_42	MISC
+Poder Executivo	ORG
+Lei	MISC
+ARTIGO_43	PER
+Lei	MISC
+ARTIGO_116	MISC
+NR	ORG
+ARTIGO_44	LOC
+Capitulo IV do Titulo IV da Lei	MISC
+ARTIGO_45	ORG
+Estados	LOC
+Distrito Federal	LOC
+Municipios	LOC
+Lei	MISC
+Secao II do Capitulo III	MISC
+ARTIGO_46	MISC
+II	MISC
+Lei	MISC
+ARTIGO_47	PER
+Lei	MISC
+Brasilia	LOC
+Independencia	LOC
+Republica	MISC
+ROUSSEFF Jose Eduardo Cardoso	PER
+Celso Luiz Nunes Amorim Antonio de Aguiar Patriota Miriam Belchior Paulo Bernardo Silva Gleisi Hoffmann Jose Elito Carvalho Siqueira Helena Chagas Luis Inacio Lucena Adams	PER
+Jorge Hage Sobrinho Maria do Rosario Nunes	PER
+DOU	MISC
