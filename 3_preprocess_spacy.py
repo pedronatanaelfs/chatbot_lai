@@ -54,7 +54,7 @@ def main():
     # 7) (Opcional) Armazenar resultados em arquivos de texto
     # Se quiser salvar as sentenças, tokens e entidades, descomente abaixo:
 
-    """
+    
     with open("sentencas.txt", "w", encoding="utf-8") as f_sent:
         for sent in sents:
             f_sent.write(sent.text.strip() + "\n")
@@ -68,7 +68,7 @@ def main():
         f_ent.write("ENTIDADE\tLABEL\n")
         for ent in ents:
             f_ent.write(f"{ent.text}\t{ent.label_}\n")
-    """
+    
 
     print("[*] Fim do script. Todas as etapas foram executadas com sucesso.")
 

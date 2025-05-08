@@ -1,4 +1,4 @@
-texto	lemma	pos
+TEXT	LEMMA	POS
 PREAMBULO	PREAMBULO	PROPN
 Presidencia	presidencia	NOUN
 Republica	Republica	PROPN

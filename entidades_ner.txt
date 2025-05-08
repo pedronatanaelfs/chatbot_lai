@@ -1,4 +1,4 @@
-texto	label
+ENTIDADE	LABEL
 PREAMBULO	ORG
 Presidencia da Republica	MISC
 Casa Civil Subchefia para Assuntos Juridicos LEI	PER
@@ -6,7 +6,6 @@ DE 18 DE NOVEMBRO DE 2011	MISC
 Mensagem de veto Vigencia Regulamento Regula	MISC
 inciso XXXIII	MISC
 inciso II do SS 3o	MISC
-SS	ORG
 Constituicao	MISC
 Federal	LOC
 Lei	MISC

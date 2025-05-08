@@ -30,7 +30,6 @@ def normalizar_texto(texto):
     Aplica normalizações gerais:
       - Remove espaços em excesso
       - Remove caracteres estranhos repetidos
-    (Caso queira tudo em minúsculas, descomente a linha de lower()).
     """
     # texto = texto.lower()  # Descomente se quiser forçar minúsculas
 

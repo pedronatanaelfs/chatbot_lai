@@ -1,0 +1,75 @@
+ENTIDADE	LABEL
+Presidencia da Republica	ORG
+Casa Civil Subchefia para Assuntos Juridicos LEI	ORG
+DE 18 DE NOVEMBRO DE 2011	MISC
+Constituicao	MISC
+Federal	LOC
+PRESIDENTA	MISC
+Congresso Nacional	ORG
+Uniao	ORG
+Estados	LOC
+Distrito Federal	LOC
+Municipios	LOC
+Constituicao Federal	MISC
+Poderes Executivo	ORG
+Legislativo	ORG
+Cortes de Contas	LOC
+Judiciario	LOC
+Ministerio Publico	ORG
+subvencoes	MISC
+contrato de gestao	MISC
+Estado	LOC
+pessoa fisica	PER
+prestacoes	LOC
+VETADO	MISC
+internet	MISC
+telefonica	ORG
+Convencao sobre os Direitos das Pessoas com Deficiencia	MISC
+Decreto Legislativo	ORG
+Lei Complementar	LOC
+Lei de Responsabilidade Fiscal	LEGISLACAO
+Estara	PER
+SS 2o Estara	ORG
+Poder Executivo Federal	ORG
+Controladoria-Geral da Uniao	ORG
+Comissao Mista de Reavaliacao de Informacoes	ORG
+Ministro de Estado da area	MISC
+Forcas Armadas	LOC
+Comando.	ORG
+Poderes Legislativo e Judiciario	ORG
+Poder Judiciario	ORG
+Conselho Nacional de Justica	ORG
+Conselho Nacional do Ministerio Publico	ORG
+Gerais	LOC
+Pais	ORG
+Presidente	PER
+Vice-Presidente da Republica	PER
+Controle de Informacoes Sigilosas	ORG
+Regulamento	ORG
+Reclassificacao	MISC
+Desclassificacao	LOC
+Presidente da Republica	PER
+Ministros de	ORG
+Comandantes da Marinha	ORG
+Exercito	ORG
+Aeronautica	ORG
+Chefes de Missoes Diplomaticas	ORG
+Consulares	LOC
+fundacoes	MISC
+Assessoramento Superiores	ORG
+subdelegacao	ORG
+razao do exercicio	LOC
+analise	LOC
+sancao	LOC
+Pais	LOC
+Gabinete de Seguranca Institucional da Presidencia da Republica	ORG
+Nucleo de Seguranca e Credenciamento	LOC
+Republica Federativa do Brasil	LOC
+Ministerio das Relacoes Exteriores	ORG
+Congresso Nacional de relatorio	LOC
+Poder Executivo	ORG
+Brasilia	LOC
+Independencia	LOC
+ROUSSEFF Jose Eduardo Cardoso	PER
+Celso Luiz Nunes Amorim Antonio de Aguiar Patriota Miriam Belchior Paulo Bernardo Silva Gleisi Hoffmann Jose Elito Carvalho Siqueira Helena Chagas Luis Inacio Lucena Adams	PER
+Jorge Hage Sobrinho Maria do Rosario Nunes	PER
