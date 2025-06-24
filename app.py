@@ -68,11 +68,13 @@ def carregar_artigos(caminho_txt="sentencas.txt"):
 def criar_index_tfidf(textos):
     print("[*] Criando índice TF-IDF (uso eficiente de memória)...")
     vectorizer = TfidfVectorizer(
-        max_features=5000,  # Limitar features
+        max_features=8000,  # Mais features para capturar melhor
         stop_words=None,
-        ngram_range=(1, 2),
+        ngram_range=(1, 3),  # Incluir trigramas
         min_df=1,
-        max_df=0.8
+        max_df=0.9,  # Ser menos restritivo
+        sublinear_tf=True,  # Melhor para textos longos
+        lowercase=True  # Normalizar case
     )
     tfidf_matrix = vectorizer.fit_transform(textos)
     return vectorizer, tfidf_matrix
@@ -82,7 +84,14 @@ def buscar_pergunta_tfidf(pergunta, vectorizer, tfidf_matrix, artigos, top_k=3):
     pergunta_vec = vectorizer.transform([pergunta])
     similaridades = cosine_similarity(pergunta_vec, tfidf_matrix).flatten()
     indices_ordenados = np.argsort(similaridades)[::-1][:top_k]
-    resultados = [artigos[idx] for idx in indices_ordenados if similaridades[idx] > 0.1]
+    
+    # Ser mais permissivo com o threshold (0.05 em vez de 0.1)
+    resultados = [artigos[idx] for idx in indices_ordenados if similaridades[idx] > 0.05]
+    
+    # Se não encontrar nada, pegar os top_k mesmo com score baixo
+    if not resultados:
+        resultados = [artigos[idx] for idx in indices_ordenados[:top_k]]
+    
     return resultados[:top_k]
 
 # === Construir prompt com contexto ===
@@ -176,13 +185,9 @@ def processar_pergunta():
             return jsonify({'erro': 'Pergunta não fornecida'}), 400
         
         # Buscar trechos relevantes
-        trechos = buscar_pergunta_tfidf(pergunta, vectorizer, tfidf_matrix, artigos, top_k=3)
+        trechos = buscar_pergunta_tfidf(pergunta, vectorizer, tfidf_matrix, artigos, top_k=4)
         
-        if not trechos:
-            return jsonify({
-                'resposta': 'Não encontrei informações específicas sobre sua pergunta na Lei de Acesso à Informação. Pode reformular a pergunta?',
-                'artigos_relacionados': []
-            })
+        # Agora sempre teremos trechos, pois a função buscar_pergunta_tfidf garante isso
         
         # Construir prompt e gerar resposta
         prompt = construir_prompt(pergunta, trechos)
