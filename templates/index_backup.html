@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot - Lei de Acesso à Informação</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .chat-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 15px 20px;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.bot {
+            align-self: flex-start;
+            background: white;
+            color: #333;
+            border: 1px solid #e9ecef;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #667eea;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        .input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        #perguntaInput {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            resize: none;
+            min-height: 50px;
+            max-height: 120px;
+            font-family: inherit;
+        }
+
+        #perguntaInput:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        #enviarBtn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        #enviarBtn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        #enviarBtn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .artigos-relacionados {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .artigos-relacionados h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .artigo-item {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 3px solid #667eea;
+            font-size: 0.85rem;
+        }
+
+        .artigo-id {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .error {
+            background: #fee;
+            color: #c53030;
+            border: 1px solid #fed7d7;
+            border-left: 4px solid #e53e3e;
+        }
+
+        .welcome-message {
+            text-align: center;
+            color: #666;
+            padding: 40px 20px;
+            border: 2px dashed #e9ecef;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .suggestion {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            color: #667eea;
+        }
+
+        .suggestion:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                height: 100vh;
+                border-radius: 0;
+            }
+            
+            .header {
+                border-radius: 0;
+                padding: 20px;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .suggestions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ Chatbot LAI</h1>
+            <p>Assistente para Lei de Acesso à Informação</p>
+        </div>
+        
+        <div class="chat-container" id="chatContainer">
+            <div class="welcome-message">
+                <h3>👋 Bem-vindo ao Chatbot da Lei de Acesso à Informação!</h3>
+                <p>Faça perguntas sobre a LAI (Lei nº 12.527/2011) e receba respostas precisas baseadas no texto oficial da lei.</p>
+                
+                <div class="suggestions">
+                    <div class="suggestion" onclick="enviarPerguntaSugerida('O que é a Lei de Acesso à Informação?')">
+                        O que é a LAI?
+                    </div>
+                    <div class="suggestion" onclick="enviarPerguntaSugerida('Como solicitar informações públicas?')">
+                        Como solicitar informações?
+                    </div>
+                    <div class="suggestion" onclick="enviarPerguntaSugerida('Quais são os prazos para resposta?')">
+                        Prazos de resposta
+                    </div>
+                    <div class="suggestion" onclick="enviarPerguntaSugerida('O que fazer se meu pedido for negado?')">
+                        Pedido negado
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="input-container">
+            <div class="input-wrapper">
+                <textarea 
+                    id="perguntaInput" 
+                    placeholder="Digite sua pergunta sobre a Lei de Acesso à Informação..."
+                    rows="1"
+                ></textarea>
+            </div>
+            <button id="enviarBtn" onclick="enviarPergunta()">
+                <span id="btnIcon">▶</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const chatContainer = document.getElementById('chatContainer');
+        const perguntaInput = document.getElementById('perguntaInput');
+        const enviarBtn = document.getElementById('enviarBtn');
+        const btnIcon = document.getElementById('btnIcon');
+
+        // Auto-resize textarea
+        perguntaInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Enter para enviar (Shift+Enter para nova linha)
+        perguntaInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                enviarPergunta();
+            }
+        });
+
+        function enviarPerguntaSugerida(pergunta) {
+            perguntaInput.value = pergunta;
+            enviarPergunta();
+        }
+
+        function adicionarMensagem(texto, tipo, artigosRelacionados = null) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${tipo}`;
+            
+            if (tipo === 'user') {
+                messageDiv.textContent = texto;
+            } else {
+                messageDiv.innerHTML = texto.replace(/\n/g, '<br>');
+                
+                if (artigosRelacionados && artigosRelacionados.length > 0) {
+                    const artigosDiv = document.createElement('div');
+                    artigosDiv.className = 'artigos-relacionados';
+                    artigosDiv.innerHTML = `
+                        <h4>📚 Artigos relacionados consultados:</h4>
+                        ${artigosRelacionados.map(artigo => `
+                            <div class="artigo-item">
+                                <div class="artigo-id">${artigo.id}</div>
+                                <div>${artigo.texto}</div>
+                            </div>
+                        `).join('')}
+                    `;
+                    messageDiv.appendChild(artigosDiv);
+                }
+            }
+            
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function mostrarCarregamento() {
+            const loadingDiv = document.createElement('div');
+            loadingDiv.className = 'message bot loading';
+            loadingDiv.id = 'loading';
+            loadingDiv.innerHTML = `
+                <span>Consultando a Lei de Acesso à Informação</span>
+                <div class="typing-indicator">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            `;
+            chatContainer.appendChild(loadingDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function removerCarregamento() {
+            const loading = document.getElementById('loading');
+            if (loading) {
+                loading.remove();
+            }
+        }
+
+        async function enviarPergunta() {
+            const pergunta = perguntaInput.value.trim();
+            
+            if (!pergunta) {
+                return;
+            }
+
+            // Remover mensagem de boas-vindas se existir
+            const welcomeMessage = document.querySelector('.welcome-message');
+            if (welcomeMessage) {
+                welcomeMessage.remove();
+            }
+
+            // Adicionar pergunta do usuário
+            adicionarMensagem(pergunta, 'user');
+            
+            // Limpar input e desabilitar botão
+            perguntaInput.value = '';
+            perguntaInput.style.height = 'auto';
+            enviarBtn.disabled = true;
+            btnIcon.textContent = '⏳';
+            
+            // Mostrar carregamento
+            mostrarCarregamento();
+
+            try {
+                const response = await fetch('/api/pergunta', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ pergunta: pergunta })
+                });
+
+                const data = await response.json();
+                
+                removerCarregamento();
+
+                if (response.ok) {
+                    adicionarMensagem(data.resposta, 'bot', data.artigos_relacionados);
+                } else {
+                    adicionarMensagem(`❌ Erro: ${data.erro}`, 'bot error');
+                }
+            } catch (error) {
+                removerCarregamento();
+                adicionarMensagem(`❌ Erro de conexão: ${error.message}`, 'bot error');
+            }
+
+            // Reabilitar botão
+            enviarBtn.disabled = false;
+            btnIcon.textContent = '▶';
+            perguntaInput.focus();
+        }
+
+        // Verificar status da API ao carregar
+        window.addEventListener('load', async function() {
+            try {
+                const response = await fetch('/api/status');
+                const data = await response.json();
+                console.log('Status da API:', data);
+            } catch (error) {
+                console.error('Erro ao verificar status da API:', error);
+            }
+        });
+    </script>
+</body>
+</html> 

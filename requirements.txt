@@ -10,3 +10,6 @@ sentence-transformers
 scikit-learn
 faiss-cpu
 tqdm
+openai-whisper
+soundfile
+pydub

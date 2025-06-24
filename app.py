@@ -2,6 +2,9 @@ import os
 import faiss
 import requests
 import pandas as pd
+import tempfile
+import whisper
+from pydub import AudioSegment
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 from dotenv import load_dotenv
@@ -21,6 +24,7 @@ LLM_MODEL = "llama3-70b-8192"
 artigos = None
 model = None
 index = None
+whisper_model = None
 
 # === Carregar artigos da LAI ===
 def carregar_artigos(caminho_txt="sentencas.txt"):
@@ -95,6 +99,20 @@ def gerar_resposta_llm(prompt):
     response.raise_for_status()
     return response.json()["choices"][0]["message"]["content"]
 
+# === Inicializar Whisper ===
+def inicializar_whisper():
+    global whisper_model
+    try:
+        print("[*] Carregando modelo Whisper...")
+        # Usar modelo small para balance entre qualidade e velocidade
+        whisper_model = whisper.load_model("small")
+        print("[✓] Modelo Whisper carregado com sucesso!")
+        return True
+    except Exception as e:
+        print(f"[ERRO] Falha ao carregar Whisper: {e}")
+        whisper_model = None
+        return False
+
 # === Inicializar o sistema ===
 def inicializar_sistema():
     global artigos, model, index
@@ -103,6 +121,10 @@ def inicializar_sistema():
     textos = [a["texto"] for a in artigos]
     embeddings, model = gerar_embeddings(textos)
     index = criar_index_faiss(embeddings)
+    
+    # Inicializar Whisper
+    inicializar_whisper()
+    
     print("[✓] Sistema inicializado com sucesso!")
 
 # === Rotas da API ===
@@ -134,9 +156,71 @@ def processar_pergunta():
     except Exception as e:
         return jsonify({'erro': str(e)}), 500
 
+@app.route('/api/transcrever', methods=['POST'])
+def transcrever_audio():
+    try:
+        if whisper_model is None:
+            return jsonify({'erro': 'Modelo Whisper não disponível'}), 500
+        
+        # Verificar se arquivo de áudio foi enviado
+        if 'audio' not in request.files:
+            return jsonify({'erro': 'Arquivo de áudio não encontrado'}), 400
+        
+        audio_file = request.files['audio']
+        if audio_file.filename == '':
+            return jsonify({'erro': 'Nenhum arquivo selecionado'}), 400
+        
+        # Salvar arquivo temporário
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.wav') as temp_file:
+            audio_file.save(temp_file.name)
+            temp_path = temp_file.name
+        
+        try:
+            # Converter para formato suportado se necessário
+            audio = AudioSegment.from_file(temp_path)
+            audio = audio.set_channels(1).set_frame_rate(16000)  # Mono, 16kHz
+            
+            # Salvar áudio convertido
+            converted_path = temp_path.replace('.wav', '_converted.wav')
+            audio.export(converted_path, format='wav')
+            
+            # Transcrever com Whisper
+            print("[*] Transcrevendo áudio...")
+            result = whisper_model.transcribe(
+                converted_path, 
+                language='pt',  # Português
+                fp16=False  # Para compatibilidade
+            )
+            
+            transcricao = result['text'].strip()
+            print(f"[✓] Transcrição: {transcricao}")
+            
+            return jsonify({
+                'transcricao': transcricao,
+                'confianca': result.get('confidence', 0.9),
+                'idioma': result.get('language', 'pt')
+            })
+            
+        finally:
+            # Limpar arquivos temporários
+            try:
+                os.unlink(temp_path)
+                if 'converted_path' in locals():
+                    os.unlink(converted_path)
+            except:
+                pass
+                
+    except Exception as e:
+        print(f"[ERRO] Erro na transcrição: {e}")
+        return jsonify({'erro': f'Erro na transcrição: {str(e)}'}), 500
+
 @app.route('/api/status')
 def status():
-    return jsonify({'status': 'Sistema funcionando', 'artigos_carregados': len(artigos) if artigos else 0})
+    return jsonify({
+        'status': 'Sistema funcionando', 
+        'artigos_carregados': len(artigos) if artigos else 0,
+        'whisper_disponivel': whisper_model is not None
+    })
 
 if __name__ == '__main__':
     inicializar_sistema()
