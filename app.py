@@ -25,20 +25,43 @@ tfidf_matrix = None
 # === Carregar artigos da LAI ===
 def carregar_artigos(caminho_txt="sentencas.txt"):
     artigos = []
-    with open(caminho_txt, "r", encoding="utf-8") as f:
-        bloco = ""
-        artigo_id = ""
-        for linha in f:
-            linha = linha.strip()
-            if linha.startswith("[ARTIGO_"):
-                if artigo_id and bloco:
-                    artigos.append({"id": artigo_id, "texto": bloco.strip()})
-                artigo_id = linha.strip("[]")
-                bloco = ""
-            else:
-                bloco += " " + linha
-        if artigo_id and bloco:
-            artigos.append({"id": artigo_id, "texto": bloco.strip()})
+    try:
+        with open(caminho_txt, "r", encoding="utf-8") as f:
+            bloco = ""
+            artigo_id = ""
+            for linha in f:
+                linha = linha.strip()
+                if linha.startswith("[ARTIGO_"):
+                    if artigo_id and bloco:
+                        artigos.append({"id": artigo_id, "texto": bloco.strip()})
+                    artigo_id = linha.strip("[]")
+                    bloco = ""
+                else:
+                    bloco += " " + linha
+            if artigo_id and bloco:
+                artigos.append({"id": artigo_id, "texto": bloco.strip()})
+    except FileNotFoundError:
+        print(f"[ERRO] Arquivo {caminho_txt} não encontrado!")
+        # Criar dados de exemplo para o sistema funcionar
+        artigos = [
+            {
+                "id": "ARTIGO_1",
+                "texto": "Esta Lei dispõe sobre o acesso a informações previsto no inciso XXXIII do art. 5º, no inciso II do § 3º do art. 37 e no § 2º do art. 216 da Constituição Federal; altera a Lei nº 8.112, de 11 de dezembro de 1990; revoga a Lei nº 11.111, de 5 de maio de 2005, e dispositivos da Lei nº 8.159, de 8 de janeiro de 1991; e dá outras providências."
+            },
+            {
+                "id": "ARTIGO_10",
+                "texto": "Qualquer interessado poderá apresentar pedido de acesso a informações aos órgãos e entidades referidos no art. 1º desta Lei, por qualquer meio legítimo, devendo o pedido conter a identificação do requerente e a especificação da informação requerida."
+            },
+            {
+                "id": "ARTIGO_11",
+                "texto": "O órgão ou entidade pública deverá autorizar ou conceder o acesso imediato à informação disponível. Não sendo possível conceder o acesso imediato, na forma disposta no caput, o órgão ou entidade que receber o pedido deverá, em prazo não superior a 20 (vinte) dias: I - comunicar a data, local e modo para se realizar a consulta, efetuar a reprodução ou obter a certidão; II - indicar as razões de fato ou de direito da recusa, total ou parcial, do acesso pretendido; ou III - comunicar que não possui a informação, indicar, se for do seu conhecimento, o órgão ou a entidade que a detém, ou, ainda, remeter o requerimento a esse órgão ou entidade, cientificando o interessado da remessa."
+            }
+        ]
+        print(f"[*] Usando dados de exemplo com {len(artigos)} artigos")
+    except Exception as e:
+        print(f"[ERRO] Erro ao carregar artigos: {e}")
+        artigos = []
+    
     return artigos
 
 # === Usar TF-IDF como alternativa aos embeddings pesados ===
@@ -102,17 +125,32 @@ def inicializar_sistema():
     global artigos, vectorizer, tfidf_matrix
     print("[*] Inicializando sistema otimizado...")
     
-    # Carregar artigos
-    artigos = carregar_artigos("sentencas.txt")
-    textos = [a["texto"] for a in artigos]
-    
-    # Usar TF-IDF em vez de embeddings pesados
-    vectorizer, tfidf_matrix = criar_index_tfidf(textos)
-    
-    # Forçar limpeza de memória
-    gc.collect()
-    
-    print(f"[✓] Sistema inicializado com {len(artigos)} artigos!")
+    try:
+        # Carregar artigos
+        artigos = carregar_artigos("sentencas.txt")
+        
+        if not artigos:
+            print("[ERRO] Nenhum artigo foi carregado!")
+            return False
+            
+        textos = [a["texto"] for a in artigos]
+        
+        # Usar TF-IDF em vez de embeddings pesados
+        vectorizer, tfidf_matrix = criar_index_tfidf(textos)
+        
+        # Forçar limpeza de memória
+        gc.collect()
+        
+        print(f"[✓] Sistema inicializado com {len(artigos)} artigos!")
+        return True
+        
+    except Exception as e:
+        print(f"[ERRO] Falha na inicialização: {e}")
+        # Definir valores padrão seguros
+        artigos = []
+        vectorizer = None
+        tfidf_matrix = None
+        return False
 
 # === Rotas da API ===
 @app.route('/')
@@ -122,6 +160,15 @@ def index_page():
 @app.route('/api/pergunta', methods=['POST'])
 def processar_pergunta():
     try:
+        # Verificar se o sistema foi inicializado corretamente
+        if vectorizer is None or tfidf_matrix is None or not artigos:
+            print("[*] Sistema não inicializado. Tentando inicializar...")
+            sucesso = inicializar_sistema()
+            if not sucesso or vectorizer is None:
+                return jsonify({
+                    'erro': 'Sistema não pôde ser inicializado. Verifique os logs do servidor.'
+                }), 500
+        
         data = request.get_json()
         pergunta = data.get('pergunta', '').strip()
         
@@ -154,7 +201,10 @@ def status():
     return jsonify({
         'status': 'Sistema funcionando (versão otimizada)', 
         'artigos_carregados': len(artigos) if artigos else 0,
-        'memoria': 'TF-IDF (baixo consumo)'
+        'memoria': 'TF-IDF (baixo consumo)',
+        'vectorizer_ok': vectorizer is not None,
+        'tfidf_matrix_ok': tfidf_matrix is not None,
+        'sistema_inicializado': all([artigos, vectorizer is not None, tfidf_matrix is not None])
     })
 
 if __name__ == '__main__':
