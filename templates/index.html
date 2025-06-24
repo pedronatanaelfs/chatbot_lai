@@ -130,6 +130,65 @@
             align-items: end;
         }
 
+        .audio-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        #audioBtn {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        #audioBtn:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        #audioBtn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #audioBtn.recording {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .audio-status {
+            font-size: 0.85rem;
+            color: #666;
+            min-width: 120px;
+        }
+
+        .audio-status.listening {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .audio-status.processing {
+            color: #f39c12;
+            font-weight: 600;
+        }
+
         .input-wrapper {
             flex: 1;
             position: relative;
@@ -269,6 +328,22 @@
             .suggestions {
                 flex-direction: column;
             }
+            
+            .input-container {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .audio-controls {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                margin-top: 10px;
+            }
+            
+            .audio-status {
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -305,10 +380,16 @@
         </div>
         
         <div class="input-container">
+            <div class="audio-controls">
+                <button id="audioBtn" onclick="toggleAudio()" title="Gravar pergunta por voz">
+                    <span id="audioIcon">🎤</span>
+                </button>
+                <div id="audioStatus" class="audio-status">Clique para falar</div>
+            </div>
             <div class="input-wrapper">
                 <textarea 
                     id="perguntaInput" 
-                    placeholder="Digite sua pergunta sobre a Lei de Acesso à Informação..."
+                    placeholder="Digite ou fale sua pergunta sobre a Lei de Acesso à Informação..."
                     rows="1"
                 ></textarea>
             </div>
@@ -323,6 +404,13 @@
         const perguntaInput = document.getElementById('perguntaInput');
         const enviarBtn = document.getElementById('enviarBtn');
         const btnIcon = document.getElementById('btnIcon');
+        const audioBtn = document.getElementById('audioBtn');
+        const audioIcon = document.getElementById('audioIcon');
+        const audioStatus = document.getElementById('audioStatus');
+
+        // Variáveis para reconhecimento de voz
+        let recognition = null;
+        let isListening = false;
 
         // Auto-resize textarea
         perguntaInput.addEventListener('input', function() {
@@ -449,8 +537,104 @@
             perguntaInput.focus();
         }
 
+        // === FUNCIONALIDADES DE ÁUDIO ===
+        
+        // Inicializar reconhecimento de voz
+        function inicializarReconhecimentoVoz() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                recognition = new SpeechRecognition();
+                
+                recognition.continuous = false;
+                recognition.interimResults = true;
+                recognition.lang = 'pt-BR';
+                recognition.maxAlternatives = 1;
+                
+                recognition.onstart = function() {
+                    isListening = true;
+                    audioBtn.classList.add('recording');
+                    audioIcon.textContent = '⏹️';
+                    audioStatus.textContent = 'Ouvindo...';
+                    audioStatus.className = 'audio-status listening';
+                };
+                
+                recognition.onresult = function(event) {
+                    let transcript = '';
+                    for (let i = event.resultIndex; i < event.results.length; i++) {
+                        transcript += event.results[i][0].transcript;
+                    }
+                    perguntaInput.value = transcript;
+                    perguntaInput.style.height = 'auto';
+                    perguntaInput.style.height = Math.min(perguntaInput.scrollHeight, 120) + 'px';
+                };
+                
+                recognition.onend = function() {
+                    isListening = false;
+                    audioBtn.classList.remove('recording');
+                    audioIcon.textContent = '🎤';
+                    audioStatus.textContent = 'Clique para falar';
+                    audioStatus.className = 'audio-status';
+                };
+                
+                recognition.onerror = function(event) {
+                    console.error('Erro no reconhecimento de voz:', event.error);
+                    isListening = false;
+                    audioBtn.classList.remove('recording');
+                    audioIcon.textContent = '🎤';
+                    
+                    let errorMsg = 'Erro no reconhecimento';
+                    switch(event.error) {
+                        case 'no-speech':
+                            errorMsg = 'Nenhuma fala detectada';
+                            break;
+                        case 'network':
+                            errorMsg = 'Erro de rede';
+                            break;
+                        case 'not-allowed':
+                            errorMsg = 'Microfone não permitido';
+                            break;
+                        case 'service-not-allowed':
+                            errorMsg = 'Serviço não disponível';
+                            break;
+                    }
+                    
+                    audioStatus.textContent = errorMsg;
+                    audioStatus.className = 'audio-status';
+                    
+                    // Resetar após 3 segundos
+                    setTimeout(() => {
+                        audioStatus.textContent = 'Clique para falar';
+                    }, 3000);
+                };
+                
+                return true;
+            } else {
+                console.warn('Reconhecimento de voz não suportado neste navegador');
+                audioBtn.style.display = 'none';
+                audioStatus.textContent = 'Voz não suportada';
+                return false;
+            }
+        }
+        
+        // Alternar gravação de áudio
+        function toggleAudio() {
+            if (!recognition) {
+                audioStatus.textContent = 'Voz não suportada';
+                return;
+            }
+            
+            if (isListening) {
+                recognition.stop();
+            } else {
+                recognition.start();
+            }
+        }
+
         // Verificar status da API ao carregar
         window.addEventListener('load', async function() {
+            // Inicializar reconhecimento de voz
+            inicializarReconhecimentoVoz();
+            
             try {
                 const response = await fetch('/api/status');
                 const data = await response.json();
