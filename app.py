@@ -2,16 +2,25 @@ import os
 import faiss
 import requests
 import pandas as pd
-from tqdm import tqdm
+from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS
 from dotenv import load_dotenv
 from sentence_transformers import SentenceTransformer
 from sklearn.preprocessing import normalize
+
+app = Flask(__name__)
+CORS(app)
 
 # === Configurar API ===
 load_dotenv()
 GROQ_API_KEY = os.getenv("LLAMA_API_KEY")
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 LLM_MODEL = "llama3-70b-8192"
+
+# Variáveis globais para o modelo
+artigos = None
+model = None
+index = None
 
 # === Carregar artigos da LAI ===
 def carregar_artigos(caminho_txt="sentencas.txt"):
@@ -86,29 +95,50 @@ def gerar_resposta_llm(prompt):
     response.raise_for_status()
     return response.json()["choices"][0]["message"]["content"]
 
-# === Execução principal ===
-def main():
-    print("[*] Carregando artigos e criando índice...")
+# === Inicializar o sistema ===
+def inicializar_sistema():
+    global artigos, model, index
+    print("[*] Inicializando sistema...")
     artigos = carregar_artigos("sentencas.txt")
     textos = [a["texto"] for a in artigos]
     embeddings, model = gerar_embeddings(textos)
     index = criar_index_faiss(embeddings)
+    print("[✓] Sistema inicializado com sucesso!")
 
-    print("\n[✓] Sistema pronto para gerar respostas. Digite sua pergunta ou 'sair'.\n")
+# === Rotas da API ===
+@app.route('/')
+def index_page():
+    return render_template('index.html')
 
-    while True:
-        pergunta = input("🔎 Pergunta: ").strip()
-        if pergunta.lower() in {"sair", "exit", "quit"}:
-            break
-
+@app.route('/api/pergunta', methods=['POST'])
+def processar_pergunta():
+    try:
+        data = request.get_json()
+        pergunta = data.get('pergunta', '').strip()
+        
+        if not pergunta:
+            return jsonify({'erro': 'Pergunta não fornecida'}), 400
+        
+        # Buscar trechos relevantes
         trechos = buscar_pergunta(pergunta, model, index, artigos, top_k=4)
+        
+        # Construir prompt e gerar resposta
         prompt = construir_prompt(pergunta, trechos)
-        print("\n[*] Enviando para o LLaMA 70B via Groq...\n")
         resposta = gerar_resposta_llm(prompt)
+        
+        return jsonify({
+            'resposta': resposta,
+            'artigos_relacionados': [{'id': t['id'], 'texto': t['texto'][:200] + '...'} for t in trechos]
+        })
+        
+    except Exception as e:
+        return jsonify({'erro': str(e)}), 500
 
-        print("\n💡 Resposta:\n")
-        print(resposta)
-        print("\n" + "="*60 + "\n")
+@app.route('/api/status')
+def status():
+    return jsonify({'status': 'Sistema funcionando', 'artigos_carregados': len(artigos) if artigos else 0})
 
-if __name__ == "__main__":
-    main()
+if __name__ == '__main__':
+    inicializar_sistema()
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=False, host='0.0.0.0', port=port) 

@@ -3,3 +3,10 @@ beautifulsoup4
 unidecode
 spacy
 pandas
+flask
+flask-cors
+python-dotenv
+sentence-transformers
+scikit-learn
+faiss-cpu
+tqdm

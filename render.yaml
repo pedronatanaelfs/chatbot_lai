@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: chatbot-lai
+    env: python
+    buildCommand: "pip install -r requirements.txt && python -m spacy download pt_core_news_lg"
+    startCommand: "python app.py"
+    envVars:
+      - key: LLAMA_API_KEY
+        sync: false
+    plan: free 
