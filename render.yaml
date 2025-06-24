@@ -2,8 +2,8 @@ services:
   - type: web
     name: chatbot-lai
     env: python
-    buildCommand: "pip install -r requirements.txt && python -m spacy download pt_core_news_lg"
-    startCommand: "python app.py"
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn --bind 0.0.0.0:$PORT --workers 1 --max-requests 100 --timeout 30 app:app"
     envVars:
       - key: LLAMA_API_KEY
         sync: false
