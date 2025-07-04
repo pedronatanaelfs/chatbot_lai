@@ -81,7 +81,7 @@ Desenvolvimento de um sistema conversacional inteligente para facilitar o acesso
 - **Parâmetros**: n-grams (1,3), max_features=8000
 - **Similaridade**: Cosine similarity (sklearn)
 - **Threshold**: 0.05
-- **Redução de memória**: 90% (500MB → 50MB)
+- **Redução de memória**: 90% (>500MB → 50MB)
 
 ### **2.2 Geração de Respostas**
 
@@ -214,7 +214,7 @@ graph TB
 #### **Otimização para Recursos Limitados**
 - **Desafio**: Deploy gratuito com limitações de memória (512MB)
 - **Abordagem**: Substituição inteligente BERT→TF-IDF, FAISS→sklearn
-- **Impacto**: Redução de 85% no uso de recursos mantendo 82% da qualidade
+- **Impacto**: Redução de 85% no uso de recursos mantendo qualidade
 
 #### **Interface Multimodal Adaptativa**
 - **Necessidade**: Acessibilidade para diferentes perfis de usuários
