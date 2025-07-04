@@ -14,7 +14,7 @@ GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 LLM_MODEL = "llama3-70b-8192"
 
 # === Carregar artigos da LAI ===
-def carregar_artigos(caminho_txt="sentencas.txt"):
+def carregar_artigos(caminho_txt="data/processed/sentencas.txt"):
     artigos = []
     with open(caminho_txt, "r", encoding="utf-8") as f:
         bloco = ""
@@ -89,7 +89,7 @@ def gerar_resposta_llm(prompt):
 # === Execução principal ===
 def main():
     print("[*] Carregando artigos e criando índice...")
-    artigos = carregar_artigos("sentencas.txt")
+    artigos = carregar_artigos("data/processed/sentencas.txt")
     textos = [a["texto"] for a in artigos]
     embeddings, model = gerar_embeddings(textos)
     index = criar_index_faiss(embeddings)

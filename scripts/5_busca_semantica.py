@@ -7,7 +7,7 @@ from sklearn.preprocessing import normalize
 
 # === 1. Carregar e estruturar os artigos ===
 
-def carregar_artigos(caminho_txt="sentencas.txt"):
+def carregar_artigos(caminho_txt="data/processed/sentencas.txt"):
     artigos = []
     with open(caminho_txt, "r", encoding="utf-8") as f:
         bloco = ""
@@ -65,7 +65,7 @@ def buscar_pergunta(pergunta, model, index, artigos, top_k=3):
 
 def main():
     print("[*] Carregando artigos...")
-    artigos = carregar_artigos("sentencas.txt")
+    artigos = carregar_artigos("data/processed/sentencas.txt")
     textos = [a["texto"] for a in artigos]
 
     embeddings, model = gerar_embeddings(textos)

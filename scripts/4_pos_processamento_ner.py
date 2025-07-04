@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 
 def limpar_entidades(df):
     # Conjunto ampliado de entidades e rótulos genéricos para descartar
@@ -93,22 +94,25 @@ def limpar_entidades(df):
     return df
 
 def main():
+    # Garantir que o diretório data/processed existe
+    os.makedirs("data/processed", exist_ok=True)
+    
     print("[*] Lendo arquivo 'entidades_ner.txt'...")
-    df = pd.read_csv("entidades_ner.txt", sep="\t")
+    df = pd.read_csv("data/processed/entidades_ner.txt", sep="\t")
 
     print("[*] Iniciando limpeza e normalização das entidades...")
     df_limpo = limpar_entidades(df)
 
     print("[*] Salvando entidades filtradas...")
-    df_limpo.to_csv("entidades_filtradas.txt", sep="\t", index=False)
+    df_limpo.to_csv("data/processed/entidades_filtradas.txt", sep="\t", index=False)
 
     print("[*] Gerando ranking de frequência...")
     freq = df_limpo["ENTIDADE"].value_counts().reset_index()
     freq.columns = ["ENTIDADE", "FREQUENCIA"]
-    freq.to_csv("entidades_frequentes.csv", index=False)
+    freq.to_csv("data/processed/entidades_frequentes.csv", index=False)
 
     print("[*] Salvando versão final com correções...")
-    df_limpo.to_csv("entidades_corrigidas.csv", index=False)
+    df_limpo.to_csv("data/processed/entidades_corrigidas.csv", index=False)
 
     print("[✓] Pós-processamento concluído com sucesso!")
 

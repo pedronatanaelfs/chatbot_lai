@@ -1,4 +1,6 @@
 import re
+import unicodedata
+import os
 
 def remover_cabecalhos_e_rodapes(linhas):
     """
@@ -25,11 +27,10 @@ def remover_linhas_vazias_ou_muito_curtas(linhas, tamanho_minimo=4):
     return [linha for linha in linhas if len(linha.strip()) >= tamanho_minimo]
 
 
-def normalizar_texto(texto):
+def normalizar_texto(texto: str) -> str:
     """
-    Aplica normalizações gerais:
-      - Remove espaços em excesso
-      - Remove caracteres estranhos repetidos
+    Normaliza o texto removendo acentos, convertendo para minúsculas e
+    removendo caracteres especiais.
     """
     # texto = texto.lower()  # Descomente se quiser forçar minúsculas
 
@@ -124,9 +125,33 @@ def limpar_e_normalizar_lei(caminho_entrada, caminho_saida):
 
 
 if __name__ == "__main__":
-    input_file = "lei_acesso_informacao_limpa.txt"
-    output_file = "lei_acesso_informacao_normalizada.txt"
-
-    print(f"[*] Lendo arquivo de entrada: {input_file}")
-    limpar_e_normalizar_lei(input_file, output_file)
-    print(f"[*] Arquivo gerado: {output_file}")
+    print("[*] Iniciando normalização do texto da Lei de Acesso à Informação...")
+    
+    # Garantir que o diretório data/raw existe
+    os.makedirs("data/raw", exist_ok=True)
+    
+    # 1. Carregar o texto limpo
+    try:
+        arquivo_entrada = "data/raw/lei_acesso_informacao_limpa.txt"
+        print(f"[*] Carregando texto do arquivo '{arquivo_entrada}'...")
+        with open(arquivo_entrada, "r", encoding="utf-8") as f:
+            texto = f.read()
+    except Exception as e:
+        print("[ERRO] Não foi possível ler o arquivo:", e)
+        raise e
+    
+    # 2. Normalizar o texto
+    texto_normalizado = normalizar_texto(texto)
+    
+    # 3. Salvar o texto normalizado
+    arquivo_saida = "data/raw/lei_acesso_informacao_normalizada.txt"
+    try:
+        print(f"[*] Salvando texto normalizado no arquivo '{arquivo_saida}'...")
+        with open(arquivo_saida, "w", encoding="utf-8") as f:
+            f.write(texto_normalizado)
+        print(f"[*] Arquivo '{arquivo_saida}' gerado com sucesso.")
+    except Exception as e:
+        print("[ERRO] Não foi possível salvar o arquivo:", e)
+        raise e
+    
+    print("[*] Processo concluído.")

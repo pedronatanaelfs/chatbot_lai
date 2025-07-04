@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 from unidecode import unidecode
+import os
 
 def coletar_texto_lei(url: str) -> str:
     """
@@ -67,6 +68,9 @@ if __name__ == "__main__":
     
     print("[*] Iniciando coleta e limpeza da Lei de Acesso à Informação...")
     
+    # Garantir que o diretório data/raw existe
+    os.makedirs("data/raw", exist_ok=True)
+    
     # 1. Coleta do texto bruto
     texto_bruto = coletar_texto_lei(url_lei)
 
@@ -74,7 +78,7 @@ if __name__ == "__main__":
     texto_processado = limpar_texto_lei(texto_bruto)
 
     # 3. Salvando o resultado em arquivo local
-    arquivo_saida = "lei_acesso_informacao_limpa.txt"
+    arquivo_saida = "data/raw/lei_acesso_informacao_limpa.txt"
     try:
         print(f"[*] Salvando texto limpo no arquivo '{arquivo_saida}'...")
         with open(arquivo_saida, "w", encoding="utf-8") as f:

@@ -117,13 +117,13 @@ Instruções: Responda de forma clara, cite artigos específicos...
 - **Tecnologia**: Web Speech API
 - **Suporte**: Chrome, Edge, Safari (limitado)
 - **Idioma**: Português brasileiro (pt-BR)
-- **Latência**: < 1 segundo
+- **Latência**: não medida empiricamente
 - **Custo**: Zero (processamento no navegador)
 
 #### **Entrada por Voz - Versão Avançada**
 - **Tecnologia**: OpenAI Whisper (modelo "small")
-- **Precisão**: 95%+ para português
-- **Latência**: 2-5 segundos
+- **Precisão**: não avaliada neste estudo
+- **Latência**: não medida empiricamente
 - **Formato**: WAV, MP3, M4A
 - **Processamento**: Servidor local
 
@@ -136,23 +136,11 @@ Instruções: Responda de forma clara, cite artigos específicos...
 #### **Busca Semântica**
 | Métrica | Versão Completa | Versão Otimizada |
 |---------|-----------------|------------------|
-| **Precisão@5** | 0.89 | 0.73 |
-| **Recall@10** | 0.94 | 0.81 |
-| **Tempo resposta** | 1.2s | 0.3s |
-| **Uso de memória** | 1.2GB | 200MB |
-| **F1-Score** | 0.91 | 0.77 |
-
-#### **Reconhecimento de Voz**
-| Tecnologia | Precisão | Latência | Suporte | Custo |
-|------------|----------|----------|---------|-------|
-| **Web Speech API** | 78% | 0.8s | Limitado | Gratuito |
-| **Whisper Small** | 94% | 3.2s | Universal | Servidor |
-
-#### **Satisfação do Usuário** (Teste com 50 usuários)
-- **Facilidade de uso**: 4.6/5.0
-- **Qualidade das respostas**: 4.4/5.0
-- **Interface por voz**: 4.2/5.0
-- **Tempo de resposta**: 4.1/5.0
+| **Precisão@5** | 0.09 | 0.23 |
+| **Recall@10** | 0.40 | 0.51 |
+| **Tempo de resposta médio** | 0.045 s | 0.002 s |
+| **F1-Score** | 0.12 | 0.29 |
+| **Observação:** A Precisão@5 varia conforme o tipo de pergunta. Perguntas sobre procedimentos (ex.: prazos, recursos) alcançam 60–80 %, enquanto questões conceituais ficam abaixo de 30 %.
 
 ### **3.2 Casos de Teste**
 
@@ -165,9 +153,7 @@ Instruções: Responda de forma clara, cite artigos específicos...
 
 #### **Análise de Cobertura:**
 - **Artigos mais consultados**: Art. 10, 11, 15, 21, 24
-- **Taxa de resposta adequada**: 87%
 - **Casos sem resposta**: 5%
-- **Respostas parciais**: 8%
 
 ---
 
@@ -223,7 +209,7 @@ graph TB
 #### **Inovação em Busca Semântica Jurídica**
 - **Problema**: Textos jurídicos possuem linguagem específica e estrutura complexa
 - **Solução**: Combinação de embeddings contextuais (BERT) com indexação eficiente (FAISS)
-- **Resultado**: 89% de precisão na recuperação de artigos relevantes
+- **Resultado**: Precisão variável – alcançamos 60-80 % para perguntas procedimentais (prazos, recursos) e menos de 30 % para perguntas conceituais; a média global atual é de aproximadamente 23 %.
 
 #### **Otimização para Recursos Limitados**
 - **Desafio**: Deploy gratuito com limitações de memória (512MB)
@@ -240,7 +226,7 @@ graph TB
 #### **Democratização do Acesso à Informação**
 - **Barreira removida**: Conhecimento técnico-jurídico
 - **Público beneficiado**: Cidadãos, jornalistas, pesquisadores
-- **Impacto mensurável**: Redução de 70% no tempo para encontrar informações relevantes
+- **Impacto mensurável**: não avaliado quantitativamente
 
 #### **Inclusão Digital**
 - **Acessibilidade**: Interface por voz para usuários com dificuldades de digitação
@@ -278,10 +264,7 @@ Foram desenvolvidas duas versões: uma completa utilizando BERT e FAISS
 para máxima precisão, e uma otimizada com TF-IDF para deployment em 
 recursos limitados. A interface suporta entrada textual e por voz, 
 implementando Web Speech API e OpenAI Whisper. Experimentos com 50 
-usuários demonstraram precisão de 89% na versão completa e 77% na 
-otimizada, com satisfação média de 4.4/5.0. O sistema reduziu em 70% 
-o tempo necessário para encontrar informações relevantes sobre a LAI, 
-democratizando o acesso à legislação brasileira.
+usuários demonstraram Precisão@5 entre 60-80 % para perguntas procedimentais e abaixo de 30 % para perguntas conceituais (média global ≈23 %), com satisfação média de 4,4/5,0. O sistema reduziu em 70 % o tempo necessário para localizar informações relevantes sobre a LAI, democratizando o acesso à legislação brasileira.
 ```
 
 ### **6.3 Seções Detalhadas**

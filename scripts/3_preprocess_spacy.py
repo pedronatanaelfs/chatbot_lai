@@ -1,4 +1,5 @@
 import spacy
+import os
 
 def main():
     # 1) Carregar o modelo spaCy
@@ -6,8 +7,12 @@ def main():
     nlp = spacy.load("pt_core_news_lg")
     print("[*] Modelo carregado com sucesso.")
 
+    # Garantir que os diretórios existem
+    os.makedirs("data/raw", exist_ok=True)
+    os.makedirs("data/processed", exist_ok=True)
+
     # 2) Ler o arquivo de texto normalizado da etapa anterior
-    arquivo_entrada = "lei_acesso_informacao_normalizada.txt"
+    arquivo_entrada = "data/raw/lei_acesso_informacao_normalizada.txt"
     print(f"[*] Lendo arquivo de entrada: {arquivo_entrada}...")
     with open(arquivo_entrada, 'r', encoding='utf-8') as f:
         texto = f.read()
@@ -55,16 +60,16 @@ def main():
     # Se quiser salvar as sentenças, tokens e entidades, descomente abaixo:
 
     
-    with open("sentencas.txt", "w", encoding="utf-8") as f_sent:
+    with open("data/processed/sentencas.txt", "w", encoding="utf-8") as f_sent:
         for sent in sents:
             f_sent.write(sent.text.strip() + "\n")
 
-    with open("tokens_filtrados.txt", "w", encoding="utf-8") as f_tok:
+    with open("data/processed/tokens_filtrados.txt", "w", encoding="utf-8") as f_tok:
         f_tok.write("TEXT\tLEMMA\tPOS\n")
         for texto_, lemma_, pos_ in tokens_filtrados:
             f_tok.write(f"{texto_}\t{lemma_}\t{pos_}\n")
 
-    with open("entidades_ner.txt", "w", encoding="utf-8") as f_ent:
+    with open("data/processed/entidades_ner.txt", "w", encoding="utf-8") as f_ent:
         f_ent.write("ENTIDADE\tLABEL\n")
         for ent in ents:
             f_ent.write(f"{ent.text}\t{ent.label_}\n")
